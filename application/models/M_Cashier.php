@@ -66,9 +66,19 @@ class M_Cashier extends CI_Model
         $res =  $this->db->insert($this->table, $data);
         return $res;
     }
-    function simpan_penjualan($nofak, $total, $jml_uang, $kembalian, $customer)
+    public function check_customer($customer)
     {
-        $this->db->query("INSERT INTO tb_jual (jual_nofak,jual_total,jual_jml_uang,jual_kembalian,jual_customer) VALUES ('$nofak','$total','$jml_uang','$kembalian','$customer')");
+        $this->db->select('*')->from('tb_customer')->where('nama_customer', $customer);
+        $res = $this->db->get()->row();
+        return $res;
+    }
+    function simpan_penjualan($nofak, $total, $data, $customer, $nohp, $alamat)
+    {
+        $check_cust = $this->check_customer($customer);
+        if ($check_cust->nama_customer  != $customer) {
+            $this->db->insert('tb_customer', $data);
+        }
+        $this->db->query("INSERT INTO tb_jual (jual_nofak,jual_total,jual_customer,jual_customer_nohp,jual_customer_alamat) VALUES ('$nofak','$total','$customer','$nohp','$alamat')");
         foreach ($this->cart->contents() as $item) {
             $data = array(
                 'd_jual_nofak'             =>    $nofak,
@@ -77,7 +87,7 @@ class M_Cashier extends CI_Model
                 'd_jual_barang_satuan'    =>    $item['satuan'],
                 'd_jual_barang_harpok'    =>    $item['harpok'],
                 'd_jual_qty'            =>    $item['qty'],
-                'd_jual_total'            =>    $item['price']
+                'd_jual_total'            =>    $item['subtotal']
             );
             $this->db->insert('tb_detail_jual', $data);
             $this->db->query("update tb_barang set stok_barang=stok_barang-'$item[qty]' where id_barang='$item[id]'");
@@ -117,5 +127,14 @@ class M_Cashier extends CI_Model
             ->join('tb_detail_jual', 'tb_detail_jual.d_jual_nofak=tb_jual.jual_nofak');
         $res = $this->db->get()->result_array();
         return $res;
+    }
+    public function autoCustomer($supplier)
+    {
+        $this->db->select('nama_customer');
+        $this->db->like('nama_customer', $supplier, 'both');
+        $this->db->order_by('nama_customer', 'ASC');
+        $this->db->limit(50);
+        $this->db->group_by('nama_customer');
+        return $this->db->get('tb_customer')->result();
     }
 }

@@ -1,3 +1,11 @@
+<style>
+    .ui-autocomplete {
+        z-index: 1050;
+        max-height: 200px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+</style>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -94,9 +102,9 @@
                             <form action="<?php echo base_url() . 'Cashier/simpan_penjualan' ?>" method="post">
                                 <div class="row mb-2">
                                     <div class="col-9">
-                                        <label>Customer Name</label>
+                                        <label>Nama Customer</label>
                                         <div class="col-7">
-                                            <input type="text" name="customer_name" class="form-control">
+                                            <input type="text" name="customer_name" id="customer_name" class="form-control" onchange="listCustomer()" placeholder="Nama Customer">
                                         </div>
                                     </div>
                                     <div class="col-3">
@@ -109,17 +117,31 @@
                                 </div>
                                 <div class="row mb-2">
                                     <div class="col-9">
+                                        <label>No. Handphone</label>
+                                        <div class="col-7">
+                                            <input type="text" name="customer_nohp" id="customer_nohp" class="form-control" placeholder="No. Handphone">
+                                        </div>
+                                    </div>
+                                    <div class="col-9">
+                                        <label>Alamat</label>
+                                        <div class="col-7">
+                                            <input type="text" name="customer_alamat" id="customer_alamat" class="form-control" placeholder="Alamat">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-9">
                                         <button type="submit" class="btn btn-success ml-2">Submit<i class="fa fa-paper-plane"></i></button>
                                         <div class="col-7">
                                         </div>
                                     </div>
-                                    <div class="col-3">
+                                    <!-- <div class="col-3">
                                         <label>Tunai (Rp)</label>
                                         <div class="col-12">
                                             <input type="text" name="jual_jumlah_uang" id="jual_jumlah_uang" class="form-control">
                                             <input type="hidden" id="jml_uang2" name="jml_uang2" class="form-control input-sm" style="text-align:right;margin-bottom:5px;" required>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="row mb-2">
                                     <div class="col-9">
@@ -127,12 +149,12 @@
                                         <div class="col-7">
                                         </div>
                                     </div>
-                                    <div class="col-3">
+                                    <!-- <div class="col-3">
                                         <label>Kembalian (Rp)</label>
                                         <div class="col-12">
                                             <input type="text" name="jual_kembalian" id="jual_kembalian" class="form-control" readonly>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </form>
                         </div>
@@ -179,9 +201,34 @@
 </script>
 <script>
     $(document).ready(function() {
+        $('input[name="customer_name"]').autocomplete({
+            source: "<?= base_url('Cashier/autoCustomer/'); ?>"
+        });
         $("#nama_barang").focus();
-
     });
+
+    function listCustomer() {
+        let customer = $('#customer_name').val()
+        let customer_alamat = $('#customer_alamat')
+        let customer_nohp = $('#customer_nohp')
+        $.ajax({
+            url: "<?= base_url('Cashier/getCustomer') ?>",
+            method: "POST",
+            dataType: "json",
+            data: {
+                customer_name: customer,
+            },
+            success: function(data) {
+                if (data) {
+                    $(customer_alamat).val(data.alamat);
+                    $(customer_nohp).val(data.nohp);
+
+                    // let html2 = `<input type="text" class="form-control" name="customer_alamat" id="customer_alamat value="` + data.alamat + `"">`;
+                    // $(customer_alamat).html(html2);
+                }
+            }
+        })
+    }
 
     function selectBarang() {
         let nama_barang = $("#detail").find('select[name=nama_barang]').val();

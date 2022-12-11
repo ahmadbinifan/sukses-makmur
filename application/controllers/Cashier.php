@@ -67,27 +67,29 @@ class Cashier extends CI_Controller
     function simpan_penjualan()
     {
         if ($this->session->userdata('level') == 'admin' || $this->session->userdata('level') == 'kasir') {
-            $total = $this->input->post('total');
+            $total = str_replace(",", "", $this->input->post('total'));
             $customer = $this->input->post('customer_name');
-            $jml_uang = str_replace(",", "", $this->input->post('jual_jumlah_uang'));
-            $kembalian = $jml_uang - $total;
-            if (!empty($total) && !empty($jml_uang)) {
-                if ($jml_uang < $total) {
-                    echo $this->session->set_flashdata('msg', '<label class="label label-danger">Jumlah Uang yang anda masukan Kurang</label>');
-                    redirect('Cashier');
-                } else {
-                    $nofak = $this->Cashier->get_nofak();
-                    $this->session->set_userdata('nofak', $nofak);
-                    $order_proses = $this->Cashier->simpan_penjualan($nofak, $total, $jml_uang, $kembalian, $customer);
-                    if ($order_proses) {
-                        $this->cart->destroy();
+            $nohp = $this->input->post('customer_nohp');
+            $alamat = $this->input->post('customer_alamat');
+            $data = [
+                'nama_customer' => $customer,
+                'nohp' => $nohp,
+                'alamat' => $alamat,
+                'created_at' => date('Y-m-d H:i:s')
+            ];
+            // $jual_total_barang = $this->input->post('qty');
+            if (!empty($customer) && !empty($nohp) && !empty($alamat)) {
+                $nofak = $this->Cashier->get_nofak();
+                $this->session->set_userdata('nofak', $nofak);
+                $order_proses = $this->Cashier->simpan_penjualan($nofak, $total, $data, $customer, $nohp, $alamat);
+                if ($order_proses) {
+                    $this->cart->destroy();
 
-                        $this->session->unset_userdata('tglfak');
-                        $this->session->unset_userdata('suplier');
-                        redirect('alert/sukses');
-                    } else {
-                        redirect('Cashier');
-                    }
+                    $this->session->unset_userdata('tglfak');
+                    $this->session->unset_userdata('suplier');
+                    redirect('alert/sukses');
+                } else {
+                    redirect('Cashier');
                 }
             } else {
                 echo $this->session->set_flashdata('msg', '<label class="label label-danger">Penjualan Gagal di Simpan, Mohon Periksa Kembali Semua Inputan Anda!</label>');
@@ -110,7 +112,23 @@ class Cashier extends CI_Controller
             echo "Halaman tidak ditemukan";
         }
     }
-
+    public function getCustomer()
+    {
+        $customer = $this->input->post('customer_name');
+        $res = $this->Cashier->check_customer($customer);
+        echo json_encode($res);
+    }
+    public function autoCustomer()
+    {
+        if (isset($_GET['term'])) {
+            $result = $this->Cashier->autoCustomer($_GET['term']);
+            if (count($result) > 0) {
+                foreach ($result as $row)
+                    $arr_result[] = $row->nama_customer;
+                echo json_encode($arr_result);
+            }
+        }
+    }
     public function cetak_faktur()
     {
         $data['jual'] = $this->Cashier->cetak_faktur();

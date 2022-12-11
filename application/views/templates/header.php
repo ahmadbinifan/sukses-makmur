@@ -22,8 +22,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="<?= base_url('assets/') ?>plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
     <!-- DataTables -->
     <link rel="stylesheet" href="<?= base_url('assets/') ?>plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="<?= base_url('assets/') ?>plugins/jquery-ui/jquery-ui.min.css">
     <!-- jQuery -->
     <script src="<?= base_url('assets/') ?>plugins/jquery/jquery.min.js"></script>
+    <script src="<?= base_url('assets/') ?>plugins/jquery-ui/jquery-ui.min.js"></script>
 
 </head>
 

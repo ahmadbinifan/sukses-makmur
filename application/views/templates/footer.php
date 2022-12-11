@@ -25,6 +25,7 @@
       <script src="<?= base_url('assets/'); ?>plugins/sweetalert2/sweetalert2.all.min.js"></script>
       <!-- price format -->
       <script src="<?= base_url('assets/') . 'plugins/price/jquery.price_format.min.js' ?>"></script>
+
       <script>
           $(document).ready(function() {
               $('.select2').select2({
