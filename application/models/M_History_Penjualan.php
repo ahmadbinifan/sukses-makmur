@@ -90,6 +90,14 @@ class M_History_Penjualan extends CI_Model
         $data = $this->db->get()->result();
         return $data;
     }
+    public function remove($id)
+    {
+        $this->db->where('jual_nofak', $id);
+        $res = $this->db->delete($this->table);
+        $this->db->where('d_jual_nofak', $id);
+        $res = $this->db->delete($this->tableDetail);
+        return $res;
+    }
     public function list_customer($start, $end)
     {
         $this->db->select('jual_customer')->from($this->table);

@@ -1,8 +1,10 @@
       <!-- Main Footer -->
-      <footer class="main-footer">
+      <footer class="main-footer <?php if ($this->uri->segment(1) == 'home') {
+                                        echo "dark-mode";
+                                    } ?>">
           <!-- To the right -->
           <div class="float-right d-none d-sm-inline">
-              Version 1.0
+              Version 1.1
           </div>
           <!-- Default to the left -->
           <strong>Copyright &copy; 2022 <a href="#">Selamat Makmur</a>.</strong> All rights reserved.

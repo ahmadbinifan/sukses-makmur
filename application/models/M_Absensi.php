@@ -1,17 +1,32 @@
 <?php
-class M_Data_Barang extends CI_Model
+class M_Absensi extends CI_Model
 {
-    private $table = "tb_barang";
-    private $kategori = "tb_kategori";
-    private $primary = "id_barang";
-    var $column_order = array('id_barang', 'nama_barang', 'satuan_barang', 'harga_pokok_barang', 'harga_jual_barang', 'harga_jual_grosir_barang', 'stok_barang', 'minimal_stok_barang', 'id_kategori_barang',  null); //set column field database for datatable orderable
-    var $column_search = array('id_barang', 'nama_barang'); //set column field database for datatable searchable 
-    var $order = array('id_barang' => 'asc'); // default order 
+    private $table = "data_absen";
+    private $karyawan = "tb_karyawan";
+    private $primary = "id_karyawan";
+    var $column_order = array('id', 'pin', 'date_time', 'ver', 'status',  null); //set column field database for datatable orderable
+    var $column_search = array('pin'); //set column field database for datatable searchable 
+    var $order = array('id' => 'asc'); // default order 
     private function _get_datatables_query()
     {
+        $id_karyawan = $this->input->post('id_karyawan');
+        $start = $this->input->post('start_date');
+        $end = $this->input->post('end_date');
+
         $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->join('tb_kategori', 'tb_kategori.kategori_id=tb_barang.id_kategori_barang');
+        $this->db->join('tb_karyawan', 'tb_karyawan.id_karyawan=data_absen.pin', 'left');
+
+        if ($id_karyawan) {
+            $this->db->like('pin', $id_karyawan);
+            $this->db->or_like('tb_karyawan.nama', $id_karyawan);
+        }
+        if ($start && $end) {
+            $this->db->where('DATE(date_time) >=', date('Y-m-d', strtotime($start)));
+            $this->db->where('DATE(date_time) <=', date('Y-m-d', strtotime($end)));
+        }
+
+        // $this->db->order_by('date_time', "DESC");
 
         $i = 0;
         foreach ($this->column_search as $item) // loop column 
@@ -100,6 +115,7 @@ class M_Data_Barang extends CI_Model
         return $hsl;
     }
 
+
     public function getHead($id)
     {
         $this->db->select('*')
@@ -117,10 +133,21 @@ class M_Data_Barang extends CI_Model
 
         return $format;
     }
-    function count_product()
+    function count_employee()
     {
         return  $this->db->select('*')
             ->from($this->table)
+            ->where('DATE(date_time)', date('Y-m-d'))
+            ->group_by('pin')
             ->get()->num_rows();
+    }
+    function get_presensi($month, $pin)
+    {
+        return $this->db->select('*')
+            ->from($this->table)
+            ->where('MONTH(date_time)', date('m', strtotime($month)))
+            ->where('YEAR(date_time)', date('Y', strtotime($month)))
+            ->where('pin', $pin)
+            ->get()->result();
     }
 }

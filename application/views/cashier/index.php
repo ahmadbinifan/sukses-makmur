@@ -44,7 +44,7 @@
                                                     <select class="form-control select2" name="nama_barang" id="nama_barang" style="width: 100%;" onchange="selectBarang()">
                                                         <option value="-">-Nama Barang-</option>
                                                         <?php foreach ($listBarang as $row) { ?>
-                                                            <option value="<?= $row->id_barang; ?>"><?= $row->nama_barang; ?></option>
+                                                            <option value="<?= $row->id_barang; ?>"><?= $row->nama_barang . " - Rp. " . number_format($row->harga_jual_grosir_barang) ?></option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>
@@ -60,109 +60,119 @@
                                             <div id="submit">
                                             </div>
                                         </div>
-                                        <div class="col-md-12">
-                                            <h4>Items Detail</h4>
-                                            <table class="table table-bordered" width="100%" cellspacing="0">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Nama Barang</th>
-                                                        <th>Harga</th>
-                                                        <th>Jumlah</th>
-                                                        <th>Subtotal</th>
-                                                        <th>Aksi</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="detail_cart">
-                                                    <?php $i = 1; ?>
-                                                    <?php foreach ($this->cart->contents() as $items) : ?>
-
-                                                        <?php echo form_hidden($i . '[rowid]', $items['rowid']); ?>
-                                                        <tr>
-                                                            <td><?= $items['name']; ?></td>
-                                                            <td style="text-align:right;"><?php echo number_format($items['price']); ?></td>
-                                                            <td style="text-align:right;"><?php echo number_format($items['qty']); ?></td>
-                                                            <td style="text-align:right;"><?php echo number_format($items['subtotal']); ?></td>
-                                                            <td style="text-align:center;"><a href="<?php echo base_url() . 'Cashier/remove/' . $items['rowid']; ?>" class="btn btn-warning btn-xs"><span class="fa fa-close"></span> Batal</a></td>
-                                                        </tr>
-
-                                                        <?php $i++; ?>
-                                                    <?php endforeach; ?>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </form>
+                    <div class="col-md-12">
+                        <h4>Items Detail</h4>
+                        <table class="table table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Nama Barang</th>
+                                    <th>Harga</th>
+                                    <th>Jumlah</th>
+                                    <th>Subtotal</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="detail_cart">
+                                <?php $i = 1; ?>
+                                <?php
+                                $subtotal = 0;
+                                foreach ($cart as $items) : ?>
+                                    <?php echo form_hidden($i . '[rowid]', $items['rowid']);
+                                    $subtotal += $items['subtotal'];
+                                    ?>
+                                    <tr>
+                                        <td><?= $items['name']; ?></td>
+                                        <td style="text-align:right;"><?php echo number_format($items['price']); ?></td>
+                                        <td style="width:15%">
+                                            <form method="POST" action="<?= base_url('Cashier/updateQtyCart') ?>">
+                                                <input type="hidden" name="id" value="<?= $items['id'] ?>">
+                                                <input type="hidden" name="price" value="<?= $items['price'] ?>">
+                                                <input type="text" class="form-control text-right" name="qty" value="<?= $items['qty'] ?>">
+                                            </form>
+                                        </td>
+                                        <td style="text-align:right;"><?php echo number_format($items['subtotal']); ?></td>
+
+                                        <td style="text-align:center;"><a href="<?php echo base_url() . 'Cashier/remove/' . $items['rowid']; ?>" class="btn btn-warning btn-xs"><span class="fa fa-close"></span> Batal</a></td>
+                                    </tr>
+
+                                    <?php $i++; ?>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <form action="<?php echo base_url() . 'Cashier/simpan_penjualan' ?>" method="post">
-                                <div class="row mb-2">
-                                    <div class="col-9">
-                                        <label>Nama Customer</label>
-                                        <div class="col-7">
-                                            <input type="text" name="customer_name" id="customer_name" class="form-control" onchange="listCustomer()" placeholder="Nama Customer">
-                                        </div>
-                                    </div>
-                                    <div class="col-3">
-                                        <label>Total Belanja (Rp)</label>
-                                        <div class="col-12">
-                                            <input type="text" name="jual_total" id="jual_total" class="form-control" value="<?php echo number_format($this->cart->total()); ?>" readonly>
-                                            <input type="hidden" id="total" name="total" value="<?php echo $this->cart->total(); ?>" class="form-control input-sm" style="text-align:right;margin-bottom:5px;" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-9">
-                                        <label>No. Handphone</label>
-                                        <div class="col-7">
-                                            <input type="text" name="customer_nohp" id="customer_nohp" class="form-control" placeholder="No. Handphone">
-                                        </div>
-                                    </div>
-                                    <div class="col-9">
-                                        <label>Alamat</label>
-                                        <div class="col-7">
-                                            <input type="text" name="customer_alamat" id="customer_alamat" class="form-control" placeholder="Alamat">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-9">
-                                        <button type="submit" class="btn btn-success ml-2">Submit<i class="fa fa-paper-plane"></i></button>
-                                        <div class="col-7">
-                                        </div>
-                                    </div>
-                                    <!-- <div class="col-3">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-12">
+    <div class="card">
+        <div class="card-body">
+            <form action="<?php echo base_url() . 'Cashier/simpan_penjualan' ?>" method="post">
+                <div class="row mb-2">
+                    <div class="col-9">
+                        <label>Nama Customer</label>
+                        <div class="col-7">
+                            <input type="text" name="customer_name" id="customer_name" class="form-control" onchange="listCustomer()" placeholder="Nama Customer">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <label>Total Belanja (Rp)</label>
+                        <div class="col-12">
+                            <input type="text" name="jual_total" id="jual_total" class="form-control" value="<?php echo number_format($subtotal); ?>" readonly>
+                            <input type="hidden" id="total" name="total" value="<?php echo $subtotal ?>" class="form-control input-sm" style="text-align:right;margin-bottom:5px;" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-9">
+                        <label>No. Handphone</label>
+                        <div class="col-7">
+                            <input type="text" name="customer_nohp" id="customer_nohp" class="form-control" placeholder="No. Handphone">
+                        </div>
+                    </div>
+                    <div class="col-9">
+                        <label>Alamat</label>
+                        <div class="col-7">
+                            <input type="text" name="customer_alamat" id="customer_alamat" class="form-control" placeholder="Alamat">
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-9">
+                        <button type="submit" class="btn btn-success ml-2">Submit<i class="fa fa-paper-plane"></i></button>
+                        <div class="col-7">
+                        </div>
+                    </div>
+                    <!-- <div class="col-3">
                                         <label>Tunai (Rp)</label>
                                         <div class="col-12">
                                             <input type="text" name="jual_jumlah_uang" id="jual_jumlah_uang" class="form-control">
                                             <input type="hidden" id="jml_uang2" name="jml_uang2" class="form-control input-sm" style="text-align:right;margin-bottom:5px;" required>
                                         </div>
                                     </div> -->
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-9">
-                                        <label></label>
-                                        <div class="col-7">
-                                        </div>
-                                    </div>
-                                    <!-- <div class="col-3">
+                </div>
+                <div class="row mb-2">
+                    <div class="col-9">
+                        <label></label>
+                        <div class="col-7">
+                        </div>
+                    </div>
+                    <!-- <div class="col-3">
                                         <label>Kembalian (Rp)</label>
                                         <div class="col-12">
                                             <input type="text" name="jual_kembalian" id="jual_kembalian" class="form-control" readonly>
                                         </div>
                                     </div> -->
-                                </div>
-                            </form>
-                        </div>
-                    </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
+</div>
+</div>
+</div>
+</div>
 </div>
 
 <script>
@@ -246,7 +256,7 @@
                     $("#satuan").html(satuan);
                     let stok = `<label style="width:90px;margin-right:5px;">Stok</label><input type="text" class="form-control"  style="width:90px;margin-right:5px;" name="satuan" value="` + data.stok_barang + `" readonly>`
                     $("#stok").html(stok);
-                    let harga = `<label style="width:90px;margin-right:5px;">Harga</label><input type="text"  style="width:110px;margin-right:5px;" class="form-control" name="harga" value="` + data.harga_jual_grosir_barang + `" readonly>`
+                    let harga = `<label style="width:90px;margin-right:5px;">Harga</label><input type="text"  style="width:110px;margin-right:5px;" class="form-control" name="harga" value="` + data.harga_jual_grosir_barang.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + `" readonly>`
                     $("#harga").html(harga);
                     let jumlah = `<label style="width:90px;margin-right:5px;">Jumlah</label><input type="number" style="width:90px;margin-right:5px;" class="form-control" name="jumlah" value="` + 1 + `">`
                     $("#jumlah").html(jumlah);

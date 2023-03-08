@@ -1,17 +1,19 @@
 <?php
-class M_Data_Barang extends CI_Model
+class M_Data_Karyawan extends CI_Model
 {
-    private $table = "tb_barang";
-    private $kategori = "tb_kategori";
-    private $primary = "id_barang";
-    var $column_order = array('id_barang', 'nama_barang', 'satuan_barang', 'harga_pokok_barang', 'harga_jual_barang', 'harga_jual_grosir_barang', 'stok_barang', 'minimal_stok_barang', 'id_kategori_barang',  null); //set column field database for datatable orderable
-    var $column_search = array('id_barang', 'nama_barang'); //set column field database for datatable searchable 
-    var $order = array('id_barang' => 'asc'); // default order 
+    private $table = "tb_karyawan";
+    private $absen = "data_absen";
+    private $absen_user = "data_absen_user";
+    private $primary = "id_karyawan";
+    var $column_order = array('avatar', 'nik', 'nama', 'id_karyawan', 'jenis_kelamin', 'alamat', 'tanggal_lahir', 'agama',  null); //set column field database for datatable orderable
+    var $column_search = array('id_karyawan', 'nama'); //set column field database for datatable searchable 
+    var $order = array('id_karyawan' => 'asc'); // default order 
     private function _get_datatables_query()
     {
         $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->join('tb_kategori', 'tb_kategori.kategori_id=tb_barang.id_kategori_barang');
+        // $this->db->join('data_absen', 'data_absen.pin=tb_karyawan.id_karyawan');
+        $this->db->order_by('nama', "ASC");
 
         $i = 0;
         foreach ($this->column_search as $item) // loop column 
@@ -62,6 +64,16 @@ class M_Data_Barang extends CI_Model
         $this->db->from($this->table);
         return $this->db->count_all_results();
     }
+    public function exist($data)
+    {
+        $condition = ['id_karyawan' => $data['id_karyawan']];
+        $res = $this->db->get_where($this->table, $condition)->row();
+        if ($res) {
+            return false;
+        } else {
+            return true;
+        }
+    }
     function create($data)
     {
         $res =  $this->db->insert($this->table, $data);
@@ -100,6 +112,7 @@ class M_Data_Barang extends CI_Model
         return $hsl;
     }
 
+
     public function getHead($id)
     {
         $this->db->select('*')
@@ -117,9 +130,9 @@ class M_Data_Barang extends CI_Model
 
         return $format;
     }
-    function count_product()
+    function count_employee()
     {
-        return  $this->db->select('*')
+        return $this->db->select('*')
             ->from($this->table)
             ->get()->num_rows();
     }

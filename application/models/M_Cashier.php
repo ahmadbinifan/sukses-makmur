@@ -79,7 +79,7 @@ class M_Cashier extends CI_Model
             $this->db->insert('tb_customer', $data);
         }
         $this->db->query("INSERT INTO tb_jual (jual_nofak,jual_total,jual_customer,jual_customer_nohp,jual_customer_alamat) VALUES ('$nofak','$total','$customer','$nohp','$alamat')");
-        foreach ($this->cart->contents() as $item) {
+        foreach ($this->db->query("SELECT * FROM tb_cart")->result_array() as $item) {
             $data = array(
                 'd_jual_nofak'             =>    $nofak,
                 'd_jual_barang_id'        =>    $item['id'],
@@ -136,5 +136,12 @@ class M_Cashier extends CI_Model
         $this->db->limit(50);
         $this->db->group_by('nama_customer');
         return $this->db->get('tb_customer')->result();
+    }
+    function count_cashier()
+    {
+        return $this->db->select('*')
+            ->from($this->table)
+            ->where('DATE(jual_tanggal)', date('Y-m-d'))
+            ->get()->num_rows();
     }
 }

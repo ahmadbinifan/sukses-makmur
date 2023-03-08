@@ -1,5 +1,9 @@
  <!-- Navbar -->
- <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+ <nav class="main-header navbar navbar-expand <?php if ($this->uri->segment(1) == 'home') {
+                                                    echo "dark-mode";
+                                                } else {
+                                                    echo "navbar-white";
+                                                } ?> navbar-light">
      <!-- Left navbar links -->
      <ul class="navbar-nav">
          <li class="nav-item">
@@ -18,7 +22,7 @@
                  <a href="#" class="dropdown-item">
                      <!-- Message Start -->
                      <div class="media">
-                         <img src="<?= base_url('assets/') ?>dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+                         <img src="<?= base_url('assets/') ?>dist/img/user.png" alt="User Avatar" class="img-size-50 mr-3 img-circle">
                          <div class="media-body">
                              <h3 class="dropdown-item-title">
                                  <?= $this->session->userdata('username') ?>
@@ -32,11 +36,11 @@
                  <div class="dropdown-divider"></div>
                  <div class="container">
                      <div class="col-6">
-                         <a class="dropdown-item dropdown-footer" href="<?= base_url('account') ?>">
+                         <!-- <a class="dropdown-item dropdown-footer" href="<?= base_url('account') ?>">
                              <i class="fas fa-key fa-sm fa-fw mr-2 text-gray-400"></i>Account
-                         </a>
+                         </a> -->
                      </div>
-                     <div class="col-6">
+                     <div class="col-12">
                          <a href="<?= base_url('auth/logout') ?>" class="dropdown-item dropdown-footer">
                              <i class="fas fa-sign-out-alt fa-md fa-fw mr-2 text-gray-400"></i>Logout
                          </a>

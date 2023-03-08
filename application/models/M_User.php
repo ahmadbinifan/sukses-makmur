@@ -5,14 +5,14 @@ class M_User extends CI_Model
 {
     private $table = "user";
     private $primary = "id_user";
-    var $column_order = array(null, 'fullname', 'username', 'fullname', 'level', null); //set column field database for datatable orderable
+    var $column_order = array(null, 'fullname', 'username', 'password', 'level', null); //set column field database for datatable orderable
     var $column_search = array('fullname'); //set column field database for datatable searchable 
     var $order = array('id_user' => 'ASC'); // default order 
 
     private function _get_datatables_query()
     {
 
-        $this->db->select('*');
+        $this->db->select('*')->from($this->table);
         $i = 0;
         foreach ($this->column_search as $item) // loop column 
         {
@@ -86,19 +86,7 @@ class M_User extends CI_Model
         $res = $this->db->delete($this->table);
         return $res;
     }
-    // public function get($id)
-    // {
-    //     $this->db->select('u.*,s.id_section,section_name,d.id_departement,departement_name,div.id_division,division_name,position_name')
-    //         ->from($this->table . " as u")
-    //         ->join('tb_section s', 'u.id_section=s.id_section', 'LEFT')
-    //         ->join('tb_position p', 'u.id_position=p.id_position', 'LEFT')
-    //         ->join('tb_departement d', 'd.id_departement=s.id_departement', 'LEFT')
-    //         ->join('tb_division div', 'd.id_division=div.id_division', 'LEFT')
-    //         ->where("u." . $this->primary, $id);
-    //     $data = $this->db->get($this->table)->row_array();
-    //     return $data;
-    // }
-    //modified
+
     public function get($id)
     {
         $this->db->select('*')

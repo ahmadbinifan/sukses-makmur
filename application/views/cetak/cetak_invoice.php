@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <style>
         body {
+            margin-top: 2px;
             width: 100%;
             text-align: center;
             display: flex;
@@ -19,7 +20,7 @@
         }
 
         * {
-            font-size: 12px;
+            font-size: 15px;
             font-family: 'Times New Roman';
         }
 
@@ -39,15 +40,15 @@
 
         td.quantity,
         th.quantity {
-            width: 40px;
-            max-width: 40px;
+            width: 100px;
+            max-width: 100px;
             word-break: break-all;
         }
 
         td.price,
         th.price {
-            width: 75px;
-            max-width: 75px;
+            width: 125px;
+            max-width: 125px;
             word-break: break-all;
         }
 
@@ -57,8 +58,8 @@
         }
 
         .ticket {
-            width: 155px;
-            max-width: 155px;
+            width: 300px;
+            max-width: 250px;
         }
 
         img {
@@ -67,11 +68,17 @@
         }
 
         @media print {
+            body {
+                margin: none !important;
+
+            }
 
             .hidden-print,
             .hidden-print * {
                 display: none !important;
+
             }
+
         }
     </style>
     <title>KP. SELAMAT MAKMUR</title>
@@ -81,7 +88,8 @@
     <div class="ticket">
         <!-- <img src="./logo.png" alt="Logo"> -->
         <p class="centered">KP. SELAMAT MAKMUR
-            <br> JL. AMD / Bajenis Tebing Tinggi
+            <br> JL. AMD / Bajenis
+            <br>Tebing Tinggi
             <br> HP. 0822 7957 2457
         </p>
         <div style="margin-bottom: 10px;
@@ -102,8 +110,8 @@
                 foreach ($jual_detail as $items) { ?>
                     <tr>
                         <td class="description"><?= $items['d_jual_barang_nama'] ?></td>
-                        <td class="quantity"><?= $items['d_jual_qty'] ?></td>
-                        <td class="price"><?= $items['d_jual_total'] ?></td>
+                        <td class="quantity"><?= $items['d_jual_qty'] . "x <BR> " . number_format($items['d_jual_barang_harpok']) ?></td>
+                        <td class="price"><?= number_format($items['d_jual_total']) ?></td>
                     </tr>
                 <?php }   ?>
 
@@ -112,7 +120,7 @@
                 <tr>
                     <td class="quantity"></td>
                     <td class="description">TOTAL</td>
-                    <td class="price"><?= $jual['jual_total'] ?></td>
+                    <td class="price"><?= number_format($jual['jual_total']) ?></td>
                 </tr>
             </tfoot>
         </table>

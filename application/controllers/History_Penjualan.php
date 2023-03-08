@@ -31,13 +31,18 @@ class History_Penjualan extends CI_Controller
             $row[] = $value->jual_nofak;
             $row[] = $value->jual_total;
             $detail = "\"" . $value->jual_nofak . "\",\"detail\"";
+            $delete = "\"" . $value->jual_nofak . "\",\"delete\"";
             $btn_detail =
                 "<button type='button' class='btn btn-success btn-sm mr-1' data-toggle='modal'title='detail' data-target='#modalDetail' data-backdrop='static' onclick='get(" . $detail . ")'>
                 <i class='fas fa-eye fa-xs'></i>
             </button>";
+            $btn_delete =
+                "<button type='button' class='btn btn-danger btn-sm mr-1' data-toggle='modal'title='Delete' data-target='#modalDelete' data-backdrop='static' onclick='get(" . $delete . ")'>
+                <i class='fas fa-trash fa-xs'></i>
+            </button>";
 
             if ($this->session->userdata('level') == "admin") {
-                $action = $btn_detail;
+                $action = $btn_detail . $btn_delete;
             } else {
                 $action = $btn_detail;
             }
@@ -69,9 +74,10 @@ class History_Penjualan extends CI_Controller
     }
     public function remove()
     {
-        $id = $this->input->post('id_barang');
+        $id = $this->input->post('idnofak');
         $data = $this->History_Penjualan->remove($id);
-        echo json_encode($data);
+        $this->session->set_flashdata('msg', '<div class="alert alert-success">Data Berhasil Dihapus</div>');
+        redirect('History_Penjualan');
     }
     public function getNew()
     {

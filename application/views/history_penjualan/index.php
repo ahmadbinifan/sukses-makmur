@@ -18,6 +18,7 @@
     </div>
     <!-- /.content-header -->
     <div class="content">
+        <?= $this->session->flashdata('msg') ?>
         <div class="container-fluid">
             <div class="card">
                 <div class="card-body">
@@ -96,7 +97,7 @@
                 <div class="col-6 mb-2">
                     <label>Nama Customer :</label>
                     <!-- <input type="text" class="form-control" name="jual_customer" id="jual_customer" readonly> -->
-                    <span id="jual_customer">Isi</span>
+                    <span id="jual_customerz">Isi</span>
                 </div>
                 <center style="font-weight: bold; font-style: italic; font-size: 18px">- Detail -</center>
                 <table class="table table-sm">
@@ -119,6 +120,27 @@
 
             </div>
         </div>
+    </div>
+</div>
+<div id="modalDelete" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <form id="form-delete" action="<?= base_url('History_Penjualan/remove') ?>" method="post">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Hapus Transaksi</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="idnofak" name="idnofak">
+                    <p> Apakah anda yakin ingin menghapus transaksi <b><span id="nofaktur"></span></b> ? </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> Hapus</button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -185,10 +207,13 @@
                 id: id,
             },
             success: function(data) {
-                // $('#total_semua').val(data.header.jual_total)
-                document.getElementById('jual_customer').innerHTML = data.header.jual_customer;
+                console.log(data.header.jual_customer)
+                document.getElementById('jual_customerz').innerHTML = data.header.jual_customer;
                 document.getElementById('total_semua').innerHTML = "Rp. " + data.header.jual_total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                $("#tableDetail").empty();
                 detailTable(data)
+                document.getElementById('nofaktur').innerHTML = data.header.jual_nofak + " - " + data.header.jual_customer;
+                $("#form-delete").find('input[name=idnofak]').val(data.header.jual_nofak);
             },
             error: function(e) {
                 console.log(e);
@@ -219,6 +244,7 @@
             url: "<?= base_url('History_Penjualan/getDetail') ?>",
             method: "post",
             dataType: "json",
+            cache: false,
             data: {
                 id: data.header.jual_nofak,
             },
@@ -229,8 +255,8 @@
                         $('<td>').text('Rp. ' + order.d_jual_barang_harpok.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")),
                         $('<td>').text(order.d_jual_qty),
                         $('<td>').text('Rp. ' + order.d_jual_total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))).appendTo('#tableDetail');
-
                 });
+
             }
         })
     }

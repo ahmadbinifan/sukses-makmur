@@ -1,4 +1,4 @@
-  <div class="content-wrapper">
+  <div class="content-wrapper dark-mode">
       <!-- Content Header (Page header) -->
       <div class="content-header">
           <div class="container-fluid">
@@ -20,74 +20,67 @@
       <!-- Main content -->
       <section class="content">
           <div class="container-fluid">
-              <!-- Small boxes (Stat box) -->
               <div class="row">
                   <div class="col-lg-3 col-6">
-                      <!-- small box -->
+
                       <div class="small-box bg-info">
                           <div class="inner">
-                              <h3>150</h3>
+                              <h3><?= $count_cashier ?></h3>
 
-                              <p>New Orders</p>
+                              <p>Kasir</p>
                           </div>
                           <div class="icon">
-                              <i class="ion ion-bag"></i>
+                              <i class="fas fa-tags"></i>
                           </div>
-                          <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                          <a href="<?= base_url('cashier') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                       </div>
                   </div>
-                  <!-- ./col -->
-                  <div class="col-lg-3 col-6">
-                      <!-- small box -->
-                      <div class="small-box bg-success">
-                          <div class="inner">
-                              <h3>53<sup style="font-size: 20px">%</sup></h3>
+                  <?php if ($this->session->userdata('level') == "admin") { ?>
+                      <div class="col-lg-3 col-6">
 
-                              <p>Bounce Rate</p>
-                          </div>
-                          <div class="icon">
-                              <i class="ion ion-stats-bars"></i>
-                          </div>
-                          <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                      </div>
-                  </div>
-                  <!-- ./col -->
-                  <div class="col-lg-3 col-6">
-                      <!-- small box -->
-                      <div class="small-box bg-warning">
-                          <div class="inner">
-                              <h3>44</h3>
+                          <div class="small-box bg-success">
+                              <div class="inner">
+                                  <h3><?= $count_product ?></h3>
 
-                              <p>User Registrations</p>
+                                  <p>Data Barang</p>
+                              </div>
+                              <div class="icon">
+                                  <i class="fas fa-toolbox"></i>
+                              </div>
+                              <a href="<?= base_url('data_barang') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                           </div>
-                          <div class="icon">
-                              <i class="ion ion-person-add"></i>
-                          </div>
-                          <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                       </div>
-                  </div>
-                  <!-- ./col -->
-                  <div class="col-lg-3 col-6">
-                      <!-- small box -->
-                      <div class="small-box bg-danger">
-                          <div class="inner">
-                              <h3>65</h3>
+                      <div class="col-lg-3 col-6">
 
-                              <p>Unique Visitors</p>
+                          <div class="small-box bg-warning">
+                              <div class="inner">
+                                  <h3><?= $count_employee ?></h3>
+                                  <p>Data Karyawan</p>
+                              </div>
+                              <div class="icon">
+                                  <i class="fas fa-user-tie"></i>
+                              </div>
+                              <a href="<?= base_url('data_karyawan') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                           </div>
-                          <div class="icon">
-                              <i class="ion ion-pie-graph"></i>
-                          </div>
-                          <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                       </div>
-                  </div>
-                  <!-- ./col -->
+
+                      <div class="col-lg-3 col-6">
+
+                          <div class="small-box bg-danger">
+                              <div class="inner">
+                                  <h3><?= $count_absensi ?> / <?= $count_employee ?></h3>
+                                  <p>Absensi</p>
+                              </div>
+                              <div class="icon">
+                                  <i class="fas fa-th-list"></i>
+                              </div>
+                              <a href="<?= base_url('absensi') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                          </div>
+                      </div>
+                  <?php } ?>
               </div>
-              <!-- /.row -->
-              <!-- Main row -->
 
-              <!-- /.row (main row) -->
-          </div><!-- /.container-fluid -->
+          </div>
       </section>
       <!-- /.content -->
   </div>

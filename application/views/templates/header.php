@@ -26,8 +26,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- jQuery -->
     <script src="<?= base_url('assets/') ?>plugins/jquery/jquery.min.js"></script>
     <script src="<?= base_url('assets/') ?>plugins/jquery-ui/jquery-ui.min.js"></script>
-
+    <style>
+        .dark-mode {
+            background-color: black;
+            color: white;
+        }
+    </style>
 </head>
 
 <body class="hold-transition sidebar-mini">
-    <div class="wrapper">
+    <div class=" wrapper">
