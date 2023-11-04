@@ -1,13 +1,13 @@
       <!-- Main Footer -->
       <footer class="main-footer <?php if ($this->uri->segment(1) == 'home') {
-                                        echo "dark-mode";
-                                    } ?>">
-          <!-- To the right -->
-          <div class="float-right d-none d-sm-inline">
-              Version 1.1
-          </div>
-          <!-- Default to the left -->
-          <strong>Copyright &copy; 2022 <a href="#">Selamat Makmur</a>.</strong> All rights reserved.
+										echo "dark-mode";
+									} ?>">
+      	<!-- To the right -->
+      	<div class="float-right d-none d-sm-inline">
+      		Version 2.0
+      	</div>
+      	<!-- Default to the left -->
+      	<strong>Copyright &copy; 2023 <a href="#">Selamat Makmur</a>.</strong> All rights reserved.
       </footer>
       </div>
       <!-- ./wrapper -->
@@ -29,12 +29,12 @@
       <script src="<?= base_url('assets/') . 'plugins/price/jquery.price_format.min.js' ?>"></script>
 
       <script>
-          $(document).ready(function() {
-              $('.select2').select2({
-                  theme: 'bootstrap4'
-              })
+      	$(document).ready(function() {
+      		$('.select2').select2({
+      			theme: 'bootstrap4'
+      		})
 
-          });
+      	});
       </script>
       </body>
 
